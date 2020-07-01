@@ -16,14 +16,20 @@ export interface SnapshotOptions {
   ignore: GlobbyOptions['ignore']
 }
 
-export function compareSnapshots (from: Snapshot, to: Snapshot): string | boolean | false {
-  const fromKeys = Object.keys(from).sort()
-  const toKeys = Object.keys(to).sort()
+export function compareSnapshots (from: Snapshot, to: Snapshot): string | false {
+  const allKeys = Array.from(new Set([
+    ...Object.keys(from).sort(),
+    ...Object.keys(to).sort()
+  ]))
 
-  if (fromKeys.length !== toKeys.length || JSON.stringify(fromKeys) !== JSON.stringify(toKeys)) {
-    return true
-  }
-  for (const key of fromKeys) {
+  // const fromKeys = Object.keys(from).sort()
+  // const toKeys = Object.keys(to).sort()
+
+  // if (fromKeys.length !== toKeys.length || JSON.stringify(fromKeys) !== JSON.stringify(toKeys)) {
+  //   return true
+  // }
+
+  for (const key of allKeys) {
     if (JSON.stringify(from[key]) !== JSON.stringify(to[key])) {
       return key
     }

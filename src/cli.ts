@@ -102,7 +102,7 @@ async function main () {
             logger.success('Skipping webpack build as no changes detected')
             return
           } else {
-            logger.info(`Doing webpack rebuild because ${typeof changed === 'string' ? changed : 'some file(s)'} modified`)
+            logger.info(`Doing webpack rebuild because ${changed} modified`)
           }
         }
       }
