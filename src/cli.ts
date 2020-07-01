@@ -56,9 +56,11 @@ async function main () {
           nuxt.options.buildDir,
           nuxt.options.dir.static,
           nuxt.options.generate.dir,
+          'node_modules',
           'content', // TODO: Ignore by content module itself
           '.**/*',
-          '.*'
+          '.*',
+          'README.md'
         ],
         globbyOptions: {
           gitignore: true
