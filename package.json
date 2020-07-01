@@ -1,0 +1,44 @@
+{
+  "name": "@nuxt/static",
+  "version": "0.0.0",
+  "repository": "nuxt/static",
+  "license": "MIT",
+  "main": "dist/module.js",
+  "bin": {
+    "nuxt-static": "bin/nuxt-static.js"
+  },
+  "files": [
+    "dist",
+    "types",
+    "bin"
+  ],
+  "scripts": {
+    "build": "yarn clean && bili src/module.ts,src/cli.ts",
+    "clean": "rimraf dist",
+    "dev": "yarn fixture:dev",
+    "lint": "eslint --ext .ts,.js,.vue .",
+    "nuxt-static": "ts-node src/cli.ts",
+    "release": "yarn test && standard-version && yarn build && git push --follow-tags && npm publish",
+    "test": "yarn lint"
+  },
+  "dependencies": {
+    "consola": "^2.14.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "latest",
+    "@nuxt/typescript-build": "latest",
+    "@nuxt/typescript-runtime": "latest",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "babel-eslint": "latest",
+    "bili": "latest",
+    "eslint": "latest",
+    "nuxt-edge": "latest",
+    "rimraf": "latest",
+    "rollup-plugin-typescript2": "latest",
+    "standard-version": "latest",
+    "typescript": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
