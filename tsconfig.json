@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleResolution": "Node",
+    "outDir": "dist",
     "types": [
       "node"
     ]
