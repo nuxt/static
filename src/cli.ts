@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import _consola from 'consola'
 import destr from 'destr'
-import { SnapshotOptions, snapshot, compareSnapshots } from './snapshot'
+import { SnapshotOptions, snapshot, compareSnapshots } from './utils/snapshot'
 import { Nuxt, requireMaybeEdge } from './utils/nuxt'
 
 const logger = _consola.withTag('nuxt-static')
@@ -15,6 +15,7 @@ async function main () {
     description: '',
     usage: 'static <dir>',
     options: {},
+
     async run (cmd) {
       const config = await cmd.getNuxtConfig({ dev: false, _build: true })
       const isFullStatic = config.target === 'static'
@@ -56,6 +57,7 @@ async function main () {
         globbyOptions: {
           gitignore: true,
           ignore: [
+            nuxt.options.buildDir,
             nuxt.options.dir.static,
             nuxt.options.generate.dir,
             'content', // TODO: Ignore by content module itself

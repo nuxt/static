@@ -1,15 +1,14 @@
 {
   "name": "@nuxt/static",
   "version": "0.0.0",
+  "description": "",
   "repository": "nuxt/static",
   "license": "MIT",
-  "main": "dist/module.js",
   "bin": {
     "nuxt-static": "bin/nuxt-static.js"
   },
   "files": [
     "dist",
-    "types",
     "bin"
   ],
   "scripts": {
@@ -33,7 +32,6 @@
     "@nuxt/typescript-build": "latest",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
-    "@types/webpack": "^4.41.18",
     "babel-eslint": "latest",
     "bili": "latest",
     "eslint": "latest",
