@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/static",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "The fastest way to statically export your Nuxt application",
   "repository": "nuxt/static",
   "license": "MIT",
