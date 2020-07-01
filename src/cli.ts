@@ -12,7 +12,7 @@ async function main () {
   const { NuxtCommand, setup } = requireMaybeEdge('@nuxt/cli')
 
   // In case we run nuxt-static command directly
-  setup({ })
+  setup({ dev: false })
 
   await NuxtCommand.run({
     name: 'static',
@@ -21,24 +21,26 @@ async function main () {
     options: {},
 
     async run (cmd) {
-      const config = await cmd.getNuxtConfig({ dev: false, _build: true })
-      const isFullStatic = config.target === 'static'
-      if (!isFullStatic) {
-        config._export = true
-      } else {
-        config._legacyGenerate = true
+      async function getNuxt (flags): Promise<Nuxt> {
+        const config = await cmd.getNuxtConfig({ dev: false, ...flags })
+        const isFullStatic = config.target === 'static'
+        if (!isFullStatic) {
+          config._export = true
+        } else {
+          config._legacyGenerate = true
+        }
+        const cacheDir = (config.static && config.static.cacheDir) || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
+        config.buildDir = cacheDir
+        const nuxt = await cmd.getNuxt(config)
+        return nuxt
       }
 
-      const cacheDir = (config.static && config.static.cacheDir) || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
-      config.buildDir = cacheDir
-
-      const nuxt: Nuxt = await cmd.getNuxt(config)
-      await this.ensureBuild({ cmd, nuxt })
-      await this.generate({ cmd, isFullStatic, nuxt })
-      await nuxt.close()
+      await this.ensureBuild({ cmd, getNuxt })
+      await this.generate({ cmd, getNuxt })
     },
 
-    async generate ({ cmd, isFullStatic, nuxt }) {
+    async generate ({ cmd, isFullStatic, getNuxt }) {
+      const nuxt: Nuxt = await getNuxt({ server: true })
       const generator = await cmd.getGenerator(nuxt)
 
       generator.isFullStatic = isFullStatic
@@ -51,9 +53,12 @@ async function main () {
 
       await nuxt.server.listen(0)
       await generator.generate()
+      await nuxt.close()
     },
 
-    async ensureBuild ({ cmd, nuxt }) {
+    async ensureBuild ({ cmd, getNuxt }) {
+      const nuxt: Nuxt = await getNuxt({ _build: true, server: false })
+
       const staticOptions = defu(nuxt.options.static, {
         ignore: [
           nuxt.options.buildDir,
@@ -80,6 +85,7 @@ async function main () {
 
       // Current build meta
       const currentBuild = {
+        // @ts-ignore
         nuxtVersion: nuxt.constructor.version,
         ssr: nuxt.options.ssr,
         target: nuxt.options.target,
@@ -118,6 +124,8 @@ async function main () {
 
       // Write build.json
       fs.writeFileSync(nuxtBuildFile, JSON.stringify(currentBuild, null, 2), 'utf-8')
+
+      await nuxt.close()
     }
   })
 }
