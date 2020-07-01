@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/nuxt/static/compare/v0.0.2...v0.0.3) (2020-07-01)
+
+
+### Bug Fixes
+
+* ensure renderer ([2838a46](https://github.com/nuxt/static/commit/2838a46904e51ad2f9fdb713571eb1f71854d85e))
+
 ### [0.0.2](https://github.com/nuxt/static/compare/v0.0.1...v0.0.2) (2020-07-01)
 
 
