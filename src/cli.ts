@@ -9,7 +9,10 @@ import { Nuxt, requireMaybeEdge } from './utils/nuxt'
 const logger = _consola.withTag('nuxt-static')
 
 async function main () {
-  const { NuxtCommand } = requireMaybeEdge('@nuxt/cli')
+  const { NuxtCommand, setup } = requireMaybeEdge('@nuxt/cli')
+
+  // In case we run nuxt-static command directly
+  setup({ })
 
   await NuxtCommand.run({
     name: 'static',
