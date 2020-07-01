@@ -26,7 +26,7 @@ async function main () {
         config._legacyGenerate = true
       }
 
-      const cacheDir = config.static?.cacheDir || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
+      const cacheDir = (config.static && config.static.cacheDir) || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
       config.buildDir = cacheDir
 
       const nuxt: Nuxt = await cmd.getNuxt(config)
