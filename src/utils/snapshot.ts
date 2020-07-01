@@ -13,7 +13,7 @@ export interface Snapshot {
 export interface SnapshotOptions {
   rootDir: string
   globbyOptions: GlobbyOptions
-  patterns: string[] | string
+  ignore: GlobbyOptions['ignore']
 }
 
 export function compareSnapshots (from: Snapshot, to: Snapshot): string | boolean | false {
@@ -32,11 +32,12 @@ export function compareSnapshots (from: Snapshot, to: Snapshot): string | boolea
   return false
 }
 
-export async function snapshot ({ globbyOptions, rootDir, patterns }: SnapshotOptions): Promise <Snapshot> {
+export async function snapshot ({ globbyOptions, ignore, rootDir }: SnapshotOptions): Promise <Snapshot> {
   const snapshot: Snapshot = {}
 
-  const files = await globby(patterns, {
+  const files = await globby('**/*.*', {
     ...globbyOptions,
+    ignore,
     cwd: rootDir,
     absolute: true
   })

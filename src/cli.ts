@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import _consola from 'consola'
 import destr from 'destr'
+import defu from 'defu'
 import { SnapshotOptions, snapshot, compareSnapshots } from './utils/snapshot'
 import { Nuxt, requireMaybeEdge } from './utils/nuxt'
 
@@ -46,25 +47,25 @@ async function main () {
     },
 
     async ensureBuild ({ cmd, nuxt }) {
+      const staticOptions = defu(nuxt.options.static, {
+        ignore: [
+          nuxt.options.buildDir,
+          nuxt.options.dir.static,
+          nuxt.options.generate.dir,
+          'content', // TODO: Ignore by content module itself
+          '.**/*',
+          '.*'
+        ],
+        globbyOptions: {
+          gitignore: true
+        }
+      })
+
       // Take a snapshot of current project
       const snapshotOptions: SnapshotOptions = {
         rootDir: nuxt.options.rootDir,
-        patterns: [
-          'nuxt.config.js',
-          'nuxt.config.ts',
-          'pages'
-        ],
-        globbyOptions: {
-          gitignore: true,
-          ignore: [
-            nuxt.options.buildDir,
-            nuxt.options.dir.static,
-            nuxt.options.generate.dir,
-            'content', // TODO: Ignore by content module itself
-            '.**/*',
-            '.*'
-          ]
-        }
+        ignore: staticOptions.ignore,
+        globbyOptions: staticOptions.globbyOptions
       }
       const currentBuildSnapshot = await snapshot(snapshotOptions)
 

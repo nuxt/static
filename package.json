@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/static",
   "version": "0.0.0",
-  "description": "",
+  "description": "The fastest way to statically export your Nuxt application",
   "repository": "nuxt/static",
   "license": "MIT",
   "bin": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "consola": "^2.14.0",
     "crc": "^3.8.0",
+    "defu": "^2.0.4",
     "destr": "^1.0.0",
     "globby": "^11.0.1"
   },
