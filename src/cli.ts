@@ -26,6 +26,9 @@ async function main () {
         config._legacyGenerate = true
       }
 
+      const cacheDir = config.static?.cacheDir || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
+      config.buildDir = cacheDir
+
       const nuxt: Nuxt = await cmd.getNuxt(config)
       await this.ensureBuild({ cmd, nuxt })
       await this.generate({ cmd, isFullStatic, nuxt })
@@ -49,7 +52,6 @@ async function main () {
 
     async ensureBuild ({ cmd, nuxt }) {
       const staticOptions = defu(nuxt.options.static, {
-        cacheDir: path.resolve(nuxt.options.rootDir, 'node_modules/.cache/nuxt'),
         ignore: [
           nuxt.options.buildDir,
           nuxt.options.dir.static,
@@ -62,10 +64,6 @@ async function main () {
           gitignore: true
         }
       })
-
-      // Build nuxt inside cacheDir
-      nuxt.options.buildDir = staticOptions.cacheDir
-      await nuxt.server.renderer._ready()
 
       // Take a snapshot of current project
       const snapshotOptions: SnapshotOptions = {
