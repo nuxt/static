@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/nuxt/static/compare/v0.0.8...v0.0.9) (2020-07-01)
+
+
+### Bug Fixes
+
+* use new nuxt instance for build ([d4f8cf5](https://github.com/nuxt/static/commit/d4f8cf5fa9405b8151e0290caeaaf09f35974db4))
+
 ### [0.0.8](https://github.com/nuxt/static/compare/v0.0.7...v0.0.8) (2020-07-01)
 
 
