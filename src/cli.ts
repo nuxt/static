@@ -25,6 +25,7 @@ async function main () {
       } else {
         config._legacyGenerate = true
       }
+
       const nuxt: Nuxt = await cmd.getNuxt(config)
       await this.ensureBuild({ cmd, nuxt })
       await this.generate({ cmd, isFullStatic, nuxt })
@@ -64,6 +65,7 @@ async function main () {
 
       // Build nuxt inside cacheDir
       nuxt.options.buildDir = staticOptions.cacheDir
+      await nuxt.server.renderer._ready()
 
       // Take a snapshot of current project
       const snapshotOptions: SnapshotOptions = {
