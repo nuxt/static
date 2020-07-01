@@ -13,9 +13,9 @@
     "bin"
   ],
   "scripts": {
-    "build": "yarn clean && bili src/module.ts,src/cli.ts",
+    "build": "yarn clean && bili src/cli.ts",
     "clean": "rimraf dist",
-    "dev": "yarn fixture:dev",
+    "static": "yarn nuxt-static test/fixture",
     "lint": "eslint --ext .ts,.js,.vue .",
     "nuxt-static": "ts-node src/cli.ts",
     "release": "yarn test && standard-version && yarn build && git push --follow-tags && npm publish",

@@ -1,6 +1,6 @@
 import { name, version } from '../package.json'
 
-async function staticModule() {
+async function staticModule () {
 
 }
 

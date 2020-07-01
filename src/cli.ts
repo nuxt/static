@@ -11,22 +11,19 @@ async function main () {
     options: {},
     async run (cmd) {
       const config = await cmd.getNuxtConfig({ dev: false, _build: true })
-
       const isFullStatic = config.target === 'static'
-
-      const nuxt: Nuxt = await cmd.getNuxt(config)
-
       if (!isFullStatic) {
-        nuxt.options._export = true
+        config._export = true
       } else {
-        nuxt.options._legacyGenerate = true
+        config._legacyGenerate = true
       }
+      const nuxt: Nuxt = await cmd.getNuxt(config)
+      await this.ensureBuild({ cmd, nuxt })
+      await this.generate({ cmd, isFullStatic, nuxt })
+      await nuxt.close()
+    },
 
-      // TODO: Check if build is required
-      const builder = await cmd.getBuilder(nuxt)
-      await builder.build()
-      // TODO: Persist build status (dependencies, target, ssr)
-
+    async generate ({ cmd, isFullStatic, nuxt }) {
       const generator = await cmd.getGenerator(nuxt)
 
       generator.isFullStatic = isFullStatic
@@ -39,8 +36,15 @@ async function main () {
 
       await nuxt.server.listen(0)
       await generator.generate()
+    },
 
-      await nuxt.close()
+    async ensureBuild ({ cmd, nuxt }) {
+      // TODO: Check if build is required
+
+      const builder = await cmd.getBuilder(nuxt)
+      await builder.build()
+
+      // TODO: Persist build status (dependencies, target, ssr)
     }
   })
 }
