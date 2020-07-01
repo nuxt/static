@@ -48,6 +48,7 @@ async function main () {
 
     async ensureBuild ({ cmd, nuxt }) {
       const staticOptions = defu(nuxt.options.static, {
+        cacheDir: path.resolve(nuxt.options.rootDir, 'node_modules/.cache/nuxt'),
         ignore: [
           nuxt.options.buildDir,
           nuxt.options.dir.static,
@@ -60,6 +61,9 @@ async function main () {
           gitignore: true
         }
       })
+
+      // Build nuxt inside cacheDir
+      nuxt.options.buildDir = staticOptions.cacheDir
 
       // Take a snapshot of current project
       const snapshotOptions: SnapshotOptions = {

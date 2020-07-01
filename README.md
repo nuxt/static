@@ -29,7 +29,7 @@ npx nuxt static
 
 This command will (re-)build project if necessary and then use `nuxt generate` or `nuxt export` based on `target` option set in `nuxt.config`.
 
-By the first `nuxt static` run, checksum of project files will be added to `.nuxt/build.json`. When using CI/CD, you have to cache/restore `.nuxt` (or custom `buildDir` if used)
+By the first `nuxt static` run, checksum of project files will be added to `.nuxt/build.json`. When using CI/CD, you have to cache/restore `.nuxt`
 
 ### Options
 
@@ -50,6 +50,13 @@ export default {
 - Type: `string[]`
 
 Globby patterns to ignore for snapshot
+
+#### `cacheDir`
+
+- Type: `string`
+- Default: `{rootDir}/node_modules/.cache/nuxt`
+
+Overrides `buildDir`
 
 #### `globbyOptions`
 
