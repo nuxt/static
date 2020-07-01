@@ -1,5 +1,11 @@
-import consola from 'consola'
+import fs from 'fs'
+import path from 'path'
+import _consola from 'consola'
+import destr from 'destr'
+import { SnapshotOptions, snapshot, compareSnapshots } from './snapshot'
 import { Nuxt, requireMaybeEdge } from './utils/nuxt'
+
+const logger = _consola.withTag('nuxt-static')
 
 async function main () {
   const { NuxtCommand } = requireMaybeEdge('@nuxt/cli')
@@ -39,17 +45,72 @@ async function main () {
     },
 
     async ensureBuild ({ cmd, nuxt }) {
-      // TODO: Check if build is required
+      // Take a snapshot of current project
+      const snapshotOptions: SnapshotOptions = {
+        rootDir: nuxt.options.rootDir,
+        patterns: [
+          'nuxt.config.js',
+          'nuxt.config.ts',
+          'pages'
+        ],
+        globbyOptions: {
+          gitignore: true,
+          ignore: [
+            nuxt.options.dir.static,
+            nuxt.options.generate.dir,
+            'content', // TODO: Ignore by content module itself
+            '.**/*',
+            '.*'
+          ]
+        }
+      }
+      const currentBuildSnapshot = await snapshot(snapshotOptions)
 
+      // Current build meta
+      const currentBuild = {
+        nuxtVersion: nuxt.constructor.version,
+        ssr: nuxt.options.ssr,
+        target: nuxt.options.target,
+        snapshot: currentBuildSnapshot
+      }
+
+      // Check if build can be skipped
+      const nuxtBuildFile = path.resolve(nuxt.options.buildDir, 'build.json')
+      if (fs.existsSync(nuxtBuildFile)) {
+        const previousBuild: typeof currentBuild = destr(fs.readFileSync(nuxtBuildFile, 'utf-8')) || {}
+
+        // Quick diff
+        const needBuild = false
+        for (const field of ['nuxtVersion', 'ssr', 'target']) {
+          if (previousBuild[field] !== currentBuild[field]) {
+            logger.info(`Doing webpack rebuild because ${field} changed`)
+            break
+          }
+        }
+
+        // Full snapshot diff
+        if (!needBuild) {
+          const changed = compareSnapshots(previousBuild.snapshot, currentBuild.snapshot)
+          if (!changed) {
+            logger.success('Skipping webpack build as no changes detected')
+            return
+          } else {
+            logger.info(`Doing webpack rebuild because ${typeof changed === 'string' ? changed : 'some file(s)'} modified`)
+          }
+        }
+      }
+
+      // Webpack build
       const builder = await cmd.getBuilder(nuxt)
       await builder.build()
 
-      // TODO: Persist build status (dependencies, target, ssr)
+      // Write build.json
+      fs.writeFileSync(nuxtBuildFile, JSON.stringify(currentBuild, null, 2), 'utf-8')
     }
   })
 }
 
 main().catch((err) => {
-  consola.error(err)
+  logger.error(err)
   process.exit(1)
 })
