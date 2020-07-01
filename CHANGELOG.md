@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/nuxt/static/compare/v0.0.7...v0.0.8) (2020-07-01)
+
+
+### Bug Fixes
+
+* run setup when directly using nuxt-static ([c2600da](https://github.com/nuxt/static/commit/c2600da9f1e8874173c6f269cc1c708319a628f7))
+
 ### [0.0.7](https://github.com/nuxt/static/compare/v0.0.6...v0.0.7) (2020-07-01)
 
 ### [0.0.6](https://github.com/nuxt/static/compare/v0.0.5...v0.0.6) (2020-07-01)
