@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/nuxt/static/compare/v0.0.9...v0.0.10) (2020-07-02)
+
+
+### Bug Fixes
+
+* wrong full static condition ([e88bfaa](https://github.com/nuxt/static/commit/e88bfaaae39750bd4f6cae609b05971d030db69e))
+
 ### [0.0.9](https://github.com/nuxt/static/compare/v0.0.8...v0.0.9) (2020-07-01)
 
 
