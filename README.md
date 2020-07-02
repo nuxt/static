@@ -39,7 +39,7 @@ You can pass extra options with `static` key in `nuxt.config`:
 export default {
   static: {
     ignore: [
-
+      'docs' // ignore changes in docs to avoid re-build
     ]
   }
 }
@@ -47,9 +47,15 @@ export default {
 
 #### `ignore`
 
-- Type: `string[]`
+- Type: `string[]` or `function`
 
-Globby patterns to ignore for snapshot
+Globby patterns to ignore for snapshot. If an array is provided, it will be merged with default options, you can give a function to return an array that will remove the defaults.
+
+You call also use the `static:ignore` hook to mutate the array (useful for modules), ex:
+
+```js
+nuxt.hook('static:ignore', (ignore) => ignore.push('content'))
+```
 
 #### `cacheDir`
 

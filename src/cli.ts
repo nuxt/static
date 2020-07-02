@@ -10,6 +10,7 @@ const logger = _consola.withTag('nuxt-static')
 
 async function main () {
   const { NuxtCommand, setup } = requireMaybeEdge('@nuxt/cli')
+  const { isFullStatic } = requireMaybeEdge('@nuxt/utils')
 
   // In case we run nuxt-static command directly
   setup({ dev: false })
@@ -23,15 +24,16 @@ async function main () {
     async run (cmd) {
       async function getNuxt (flags): Promise<Nuxt> {
         const config = await cmd.getNuxtConfig({ dev: false, ...flags })
-        const isFullStatic = config.target === 'static'
-        if (isFullStatic) {
+
+        if (config.target === 'static') {
           config._export = true
         } else {
           config._legacyGenerate = true
         }
-        const cacheDir = (config.static && config.static.cacheDir) || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
-        config.buildDir = cacheDir
+        config.buildDir = (config.static && config.static.cacheDir) || path.resolve(config.rootDir, 'node_modules/.cache/nuxt')
+
         const nuxt = await cmd.getNuxt(config)
+
         return nuxt
       }
 
@@ -39,12 +41,11 @@ async function main () {
       await this.generate({ cmd, getNuxt })
     },
 
-    async generate ({ cmd, isFullStatic, getNuxt }) {
+    async generate ({ cmd, getNuxt }) {
       const nuxt: Nuxt = await getNuxt({ server: true })
       const generator = await cmd.getGenerator(nuxt)
 
-      generator.isFullStatic = isFullStatic
-
+      generator.isFullStatic = isFullStatic(nuxt.options)
       generator.initiate = async () => {
         await nuxt.callHook('generate:before', generator, generator.options.generate)
         await nuxt.callHook('export:before', generator)
@@ -58,22 +59,29 @@ async function main () {
 
     async ensureBuild ({ cmd, getNuxt }) {
       const nuxt: Nuxt = await getNuxt({ _build: true, server: false })
+      nuxt.options.static = nuxt.options.static || {}
 
       const staticOptions = defu(nuxt.options.static, {
-        ignore: [
-          nuxt.options.buildDir,
-          nuxt.options.dir.static,
-          nuxt.options.generate.dir,
-          'node_modules',
-          'content', // TODO: Ignore by content module itself
-          '.**/*',
-          '.*',
-          'README.md'
-        ],
         globbyOptions: {
           gitignore: true
         }
       })
+      staticOptions.ignore = [
+        nuxt.options.buildDir,
+        nuxt.options.dir.static,
+        nuxt.options.generate.dir,
+        'node_modules',
+        'content', // TODO: Ignore by content module itself
+        '.**/*',
+        '.*',
+        'README.md'
+      ]
+      if (typeof nuxt.options.static.ignore === 'function') {
+        staticOptions.ignore = nuxt.options.static.ignore(staticOptions.ignore)
+      } else if (Array.isArray(nuxt.options.static.ignore)) {
+        staticOptions.ignore = staticOptions.ignore.concat(nuxt.options.static.ignore)
+      }
+      await nuxt.callHook('static:ignore', staticOptions.ignore)
 
       // Take a snapshot of current project
       const snapshotOptions: SnapshotOptions = {
