@@ -24,7 +24,7 @@ async function main () {
       async function getNuxt (flags): Promise<Nuxt> {
         const config = await cmd.getNuxtConfig({ dev: false, ...flags })
         const isFullStatic = config.target === 'static'
-        if (!isFullStatic) {
+        if (isFullStatic) {
           config._export = true
         } else {
           config._legacyGenerate = true
