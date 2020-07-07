@@ -10,7 +10,8 @@ const logger = _consola.withTag('nuxt-static')
 
 async function main () {
   const { NuxtCommand, setup } = requireMaybeEdge('@nuxt/cli')
-  const { isFullStatic } = requireMaybeEdge('@nuxt/utils')
+
+  const isFullStatic = config => config.target === 'static'
 
   // In case we run nuxt-static command directly
   setup({ dev: false })
@@ -25,7 +26,7 @@ async function main () {
       async function getNuxt (flags): Promise<Nuxt> {
         const config = await cmd.getNuxtConfig({ dev: false, ...flags })
 
-        if (config.target === 'static') {
+        if (isFullStatic(config)) {
           config._export = true
         } else {
           config._legacyGenerate = true
