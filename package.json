@@ -12,7 +12,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && bili src/cli.ts",
     "clean": "rimraf dist",
     "static": "yarn nuxt-static test/fixture",
     "lint": "eslint --ext .ts,.js,.vue .",
