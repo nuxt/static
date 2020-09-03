@@ -1,3 +1,5 @@
+# This Feature is directly moved to core \(◦'⌣'◦)/
+
 # Nuxt Static
 
 The fastest way to statically export your Nuxt application ⚡️
