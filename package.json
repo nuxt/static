@@ -21,14 +21,14 @@
     "test": "yarn lint"
   },
   "dependencies": {
-    "consola": "^2.14.0",
+    "consola": "^2.15.0",
     "crc": "^3.8.0",
     "defu": "^2.0.4",
     "destr": "^1.0.0",
     "globby": "^11.0.1"
   },
   "devDependencies": {
-    "@nuxt/content": "^1.4.0",
+    "@nuxt/content": "^1.8.1",
     "@nuxt/types": "latest",
     "@nuxt/typescript-build": "latest",
     "@nuxt/typescript-runtime": "latest",
